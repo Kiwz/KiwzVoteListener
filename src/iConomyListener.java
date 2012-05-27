@@ -25,8 +25,10 @@ public class iConomyListener implements VoteListener
 	    	Methods.getMethod().getAccount(vote.getUsername()).add(200);
 	    	
 		    Server server = Votifier.getInstance().getServer();
-		    server.broadcastMessage(ChatColor.DARK_RED + vote.getUsername() + ChatColor.RED + " har stemt på MCLarvik og dermed fått 200 Dollar!");
-		    server.broadcastMessage(ChatColor.GREEN + "Info om hvordan du stemmer finner du på http://mclarvik.net");
+		    server.broadcastMessage(ChatColor.DARK_RED + vote.getUsername() + ChatColor.RED +
+		    		" har stemt på MCLarvik og dermed fått 200 Dollar!");
+		    server.broadcastMessage(ChatColor.GREEN +
+		    		"Info om hvordan du stemmer finner du på http://mclarvik.net");
 		    
 	    	Player player = Bukkit.getServer().getPlayer(vote.getUsername());
 	    	if (player != null)
@@ -39,7 +41,8 @@ public class iConomyListener implements VoteListener
 		//Start logger
 		try
 		{
-			BufferedWriter writer = new BufferedWriter(new FileWriter("plugins/dynmap/web/admin/generert/votes.txt", true));
+			BufferedWriter writer = new BufferedWriter
+					(new FileWriter("plugins/dynmap/web/admin/generert/votes.txt", true));
 			
 			writer.write(vote.toString());
 			writer.newLine();
