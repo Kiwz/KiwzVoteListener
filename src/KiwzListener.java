@@ -8,11 +8,13 @@ import java.util.Date;
 import java.util.Properties;
 import java.util.logging.Logger;
 
+import net.milkbowl.vault.economy.Economy;
+import net.milkbowl.vault.economy.EconomyResponse;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
-import com.nijikokun.register.payment.Methods;
 import com.vexsoftware.votifier.model.Vote;
 import com.vexsoftware.votifier.model.VoteListener;
 
@@ -20,20 +22,18 @@ public class KiwzListener implements VoteListener {
 	
 	private Logger log = Logger.getLogger("Minecraft");
 	private Server server = Bukkit.getServer();
+	public static Economy econ = null;
 	
 	private int amount = 100;
 	private String broadcast = "&6{player}&2 has voted for this server;&6{player}'s&2 account was raised with &6{amount}";
 	private String sendMsg = "&2Your account was raised with &6{amount}";
 	private String logSavePath = "plugins/Votifier";
 	
-	public KiwzListener()
-	{
+	public KiwzListener() {
 		Properties props = new Properties();
-		try
-		{
+		try {
 			File configFile = new File("plugins/Votifier/KiwzListener.properties");
-			if (!configFile.exists())
-			{
+			if (!configFile.exists()) {
 				configFile.createNewFile();
 
 				// Load the configuration.
@@ -54,8 +54,7 @@ public class KiwzListener implements VoteListener {
 						"Do not use the following character: \\");
 				log.info("[Votifier] KiwzListener properties not found, making a fresh one and loading this!");
 			}
-			else
-			{
+			else {
 				// Load the configuration.
 				props.load(new FileReader(configFile));
 			}
@@ -65,9 +64,7 @@ public class KiwzListener implements VoteListener {
 			sendMsg = props.getProperty("sendMsg", sendMsg);
 			logSavePath = props.getProperty("LogSavePath", logSavePath);
 			log.info("[Votifier] KiwzListener properties loaded!");
-		}
-		catch (Exception ex)
-		{
+		} catch (Exception ex) {
 			log.warning("Unable to load KiwzListener.proterties, using default values");
 		}
 	}
@@ -83,8 +80,10 @@ public class KiwzListener implements VoteListener {
 		String[] splitBroadcast = broadcast.split(";");
 		String[] splitSendMsg = sendMsg.split(";");
 		
-	    if (Methods.getMethod().hasAccount(userName)) {
-	    	Methods.getMethod().getAccount(userName).add(amount);
+	    //if (Methods.getMethod().hasAccount(userName)) {
+	    //	Methods.getMethod().getAccount(userName).add(amount);
+		EconomyResponse r = econ.depositPlayer(userName, amount);
+		if (r.transactionSuccess()) {
 	    	if (broadcast != "") {
 	    		for (int i = 0; i < splitBroadcast.length; i++) {
 	    			server.broadcastMessage(splitBroadcast[i].replaceAll("(&([a-f0-9]))", "\u00A7$2")
