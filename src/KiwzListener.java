@@ -22,7 +22,6 @@ public class KiwzListener implements VoteListener {
 	
 	private Logger log = Logger.getLogger("Minecraft");
 	private Server server = Bukkit.getServer();
-	public static Economy econ = null;
 	
 	private int amount = 100;
 	private String broadcast = "&6{player}&2 has voted for this server;&6{player}'s&2 account was raised with &6{amount}";
@@ -80,8 +79,8 @@ public class KiwzListener implements VoteListener {
 		String[] splitBroadcast = broadcast.split(";");
 		String[] splitSendMsg = sendMsg.split(";");
 		
-	    //if (Methods.getMethod().hasAccount(userName)) {
-	    //	Methods.getMethod().getAccount(userName).add(amount);
+	    //If voter is a player then give some money + announce it
+		Economy econ = server.getServicesManager().getRegistration(Economy.class).getProvider();
 		EconomyResponse r = econ.depositPlayer(userName, amount);
 		if (r.transactionSuccess()) {
 	    	if (broadcast != "") {
@@ -99,6 +98,7 @@ public class KiwzListener implements VoteListener {
 		    }
 	    }
 	    
+		//Log the vote
 	    try {
 	    	BufferedWriter writer = new BufferedWriter (new FileWriter(logSavePath + "/votes.txt", true));
 			writer.write(out);
